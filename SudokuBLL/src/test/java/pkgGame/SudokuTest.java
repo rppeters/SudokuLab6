@@ -164,5 +164,15 @@ public class SudokuTest {
 			fail("Test failed to build a Sudoku");
 		}
 	}
+	
+	@Test
+	public void getMaxMistakes_Test() {
+		try {
+			Sudoku s1 = new Sudoku(9, eGameDifficulty.HARD);
+			assertEquals(eGameDifficulty.HARD.getMaxMistakes(), 3);
+		} catch (Exception e) {
+			fail("Test failed to build Sudoku (s1)");
+		}
+	}
 
 }

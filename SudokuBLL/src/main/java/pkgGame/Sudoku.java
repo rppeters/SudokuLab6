@@ -50,6 +50,8 @@ public class Sudoku extends LatinSquare implements Serializable {
 
 	private eGameDifficulty eGameDifficulty;
 
+	private int mistakes;
+	
 	/**
 	 * Sudoku - No-arg private constructor should set the eGameDifficulty to EASY by
 	 * default
@@ -60,6 +62,7 @@ public class Sudoku extends LatinSquare implements Serializable {
 	private Sudoku() {
 		super();
 		this.eGameDifficulty = eGameDifficulty.EASY;
+		this.mistakes = 0;
 	}
 
 	/**
@@ -146,6 +149,15 @@ public class Sudoku extends LatinSquare implements Serializable {
 	 * @version 1.5
 	 * @since Lab #5
 	 */
+	
+	public int getMistakes() {
+		return mistakes;
+	}
+	
+	public void setMistakes(int mistakes) {
+		this.mistakes = mistakes;
+	}
+	
 	private void RemoveCells() {
 		SetRemaingCells();
 
