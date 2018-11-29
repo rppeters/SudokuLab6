@@ -51,9 +51,11 @@ public class SudokuController implements Initializable {
 
 	private Game game;
 
+	private int zeros;
+	
 	@FXML
 	private GridPane gpTop;
-
+	
 	@FXML
 	private HBox hboxGrid;
 
@@ -98,6 +100,7 @@ public class SudokuController implements Initializable {
 	private void CreateSudokuInstance() {
 		eGD = this.game.geteGameDifficulty();
 		s = game.StartSudoku(this.game.getPuzzleSize(), eGD);
+		zeros = s.getZeroAmount();
 	}
 
 	/**
@@ -309,6 +312,7 @@ public class SudokuController implements Initializable {
 
 				paneTarget.setOnDragDropped(new EventHandler<DragEvent>() {
 					public void handle(DragEvent event) {
+
 						Dragboard db = event.getDragboard();
 						boolean success = false;
 						Cell CellTo = (Cell) paneTarget.getCell();
@@ -322,12 +326,7 @@ public class SudokuController implements Initializable {
 						if (db.hasContent(myFormat)) {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
 
-							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
-								if (game.getShowHints()) {
-
-								}
-
-							}
+							
 
 							//	This is the code that is actually taking the cell value from the drag-from 
 							//	cell and dropping a new Image into the dragged-to cell
@@ -336,6 +335,23 @@ public class SudokuController implements Initializable {
 							paneTarget.getChildren().clear();
 							paneTarget.getChildren().add(iv);
 							System.out.println(CellFrom.getiCellValue());
+							
+							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
+								if (s.getMistakes() >= eGD.getMaxMistakes()) {
+									gameOver("lost");
+								}
+								s.setMistakes(s.getMistakes()+1);
+								if (game.getShowHints()) {
+
+								}
+
+							}
+							
+							zeros--;
+
+							System.out.println("Mistakes:" + s.getMistakes());
+							System.out.println("max Mistakes:" + eGD.getMaxMistakes());
+							
 							success = true;
 						}
 						event.setDropCompleted(success);
@@ -355,4 +371,11 @@ public class SudokuController implements Initializable {
 		InputStream is = getClass().getClassLoader().getResourceAsStream("img/" + iValue + ".png");
 		return new Image(is);
 	}
+	public void gameOver(String winOrLose) {
+		gpTop.getChildren().clear();
+		
+		Label lbl = new Label(winOrLose);
+		gpTop.add(lbl, 0, 0);
+	}
+	
 }
