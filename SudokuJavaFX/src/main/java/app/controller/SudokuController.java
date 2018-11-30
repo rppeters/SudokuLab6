@@ -336,18 +336,36 @@ public class SudokuController implements Initializable {
 							paneTarget.getChildren().add(iv);
 							System.out.println(CellFrom.getiCellValue());
 							
+							//put new value in Sudoku
+							s.getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom.getiCellValue();
+							
+							//count mistakes and end game if exceed maximum mistakes
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
+								s.setMistakes(s.getMistakes() + 1);
 								if (s.getMistakes() >= eGD.getMaxMistakes()) {
+									System.out.println("entered logic for too many mistakes");
 									gameOver("lost");
 								}
-								s.setMistakes(s.getMistakes()+1);
+								
+								
+								
 								if (game.getShowHints()) {
 
 								}
 
 							}
-							
+							//decrease zeros on valid dragDropped
 							zeros--;
+							//if no more zeros, determine if won/lost
+							if (zeros <= 0) {
+								System.out.println("Entered logic for no more all filled in");
+								s.PrintPuzzle();
+								if (s.isSudoku()) {
+									gameOver("Won");
+								} else {
+									gameOver("Lost");
+								}
+							}
 
 							System.out.println("Mistakes:" + s.getMistakes());
 							System.out.println("max Mistakes:" + eGD.getMaxMistakes());
@@ -374,7 +392,7 @@ public class SudokuController implements Initializable {
 	public void gameOver(String winOrLose) {
 		gpTop.getChildren().clear();
 		
-		Label lbl = new Label(winOrLose);
+		Label lbl = new Label("  " + winOrLose);
 		gpTop.add(lbl, 0, 0);
 	}
 	

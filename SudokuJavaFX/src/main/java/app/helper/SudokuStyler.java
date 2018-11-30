@@ -124,6 +124,13 @@ public class SudokuStyler {
 		p.setStyle(strStyle);
 		return p;
 	}
+	
+	public static Pane getGreenPane() {
+		Pane p = new Pane();
+		String strStyle = "-fx-background-color: #00ff00";
+		p.setStyle(strStyle);
+		return p;
+	}
 
 	public static void HandlePuzzleViolations(GridPane gp, ArrayList<PuzzleViolation> PVs) {
 		Pane p = getRedPane();
