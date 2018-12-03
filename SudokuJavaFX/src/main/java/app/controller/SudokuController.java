@@ -2,7 +2,9 @@ package app.controller;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import app.Game;
@@ -104,7 +106,7 @@ public class SudokuController implements Initializable {
 	}
 
 	/**
-	 * BuildGrid - This method will bild all the grid objects (top/sudoku/numbers)
+	 * BuildGrid - This method will build all the grid objects (top/sudoku/numbers)
 	 * 
 	 * @version 1.5
 	 * @since Lab #5
@@ -144,6 +146,7 @@ public class SudokuController implements Initializable {
 
 		Label lblDifficulty = new Label(eGD.toString());
 		gpTop.add(lblDifficulty, 0, 0);
+		gpTop.setHalignment(lblDifficulty,  HPos.CENTER);
 
 		ColumnConstraints colCon = new ColumnConstraints();
 		colCon.halignmentProperty().set(HPos.CENTER);
@@ -326,25 +329,20 @@ public class SudokuController implements Initializable {
 						if (db.hasContent(myFormat)) {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
 
-							
-
 							//	This is the code that is actually taking the cell value from the drag-from 
 							//	cell and dropping a new Image into the dragged-to cell
 							ImageView iv = new ImageView(GetImage(CellFrom.getiCellValue()));
 							paneTarget.getCell().setiCellValue(CellFrom.getiCellValue());
 							paneTarget.getChildren().clear();
 							paneTarget.getChildren().add(iv);
-							System.out.println(CellFrom.getiCellValue());
-							
-							//put new value in Sudoku
-							s.getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom.getiCellValue();
+							System.out.println(CellFrom.getiCellValue());							
 							
 							//count mistakes and end game if exceed maximum mistakes
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
+								s.getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom.getiCellValue();
 								s.setMistakes(s.getMistakes() + 1);
 								if (s.getMistakes() >= eGD.getMaxMistakes()) {
-									System.out.println("entered logic for too many mistakes");
-									gameOver("lost");
+									gameOver(false);
 								}
 								
 								
@@ -353,17 +351,18 @@ public class SudokuController implements Initializable {
 
 								}
 
+							} else {
+								s.getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom.getiCellValue();
 							}
 							//decrease zeros on valid dragDropped
 							zeros--;
 							//if no more zeros, determine if won/lost
 							if (zeros <= 0) {
-								System.out.println("Entered logic for no more all filled in");
 								s.PrintPuzzle();
 								if (s.isSudoku()) {
-									gameOver("Won");
+									gameOver(true);
 								} else {
-									gameOver("Lost");
+									gameOver(false);
 								}
 							}
 
@@ -389,11 +388,45 @@ public class SudokuController implements Initializable {
 		InputStream is = getClass().getClassLoader().getResourceAsStream("img/" + iValue + ".png");
 		return new Image(is);
 	}
-	public void gameOver(String winOrLose) {
+	
+	public void gameOver(boolean bWon) {
 		gpTop.getChildren().clear();
-		
-		Label lbl = new Label("  " + winOrLose);
+		Label lbl = new Label(makeLabel(bWon));
 		gpTop.add(lbl, 0, 0);
+	}
+		
+	private String makeLabel(boolean bWon) {
+		String lbl = "";
+		Random r = new SecureRandom();
+		String randMsg = "";
+		
+		String[] wonMsgs = {"Congratulations!",
+				"Great Job!",
+				"I hope it wasn't a 2x2!",
+				"Let's play again!",
+				"Woooohooo!",
+				"Yay! :)",
+				">_<"};
+		
+		String[] lostMsgs = {"Really? It wasn't that hard!",
+				"Better luck next time!",
+				"Huh? It wasn't that hard...",
+				"Try again!",
+				"Give us an A and we won't tell",
+				"How embarassing!",
+				"How sad! ;("};
+
+		if (bWon) 
+			lbl = " You Won! " + wonMsgs[r.nextInt(wonMsgs.length + 1)];
+		else 
+			lbl = "You Lost! " + lostMsgs[r.nextInt(lostMsgs.length + 1)];
+		
+		int lblSize = lbl.length();
+		while (lbl.length() < 45) {
+			lbl = " " + lbl;
+		}
+		
+		return lbl;
 	}
 	
 }

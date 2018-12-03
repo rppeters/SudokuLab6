@@ -549,7 +549,6 @@ public class Sudoku extends LatinSquare implements Serializable {
 	 *         column
 	 */
 	public boolean isValidValue(int iRow, int iCol, int iValue) {
-
 		if (doesElementExist(super.getRow(iRow), iValue)) {
 			return false;
 		}
