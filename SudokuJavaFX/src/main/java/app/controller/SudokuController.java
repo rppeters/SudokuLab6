@@ -1,5 +1,6 @@
 package app.controller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -29,6 +30,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -55,7 +58,7 @@ public class SudokuController implements Initializable {
 
 	private int zeros;
 	
-	private Cell lastCell;
+	private SudokuCell lastCell = null;
 	
 	@FXML
 	private GridPane gpTop;
@@ -215,6 +218,8 @@ public class SudokuController implements Initializable {
 			// Add the pane to the grid
 			gridPaneNumbers.add(paneSource, iCol, 0);
 		}
+		lastCell = null;
+		
 		return gridPaneNumbers;
 	}
 
@@ -332,7 +337,8 @@ public class SudokuController implements Initializable {
 						//		If the number of mistakes >= max mistakes, end the game
 						if (db.hasContent(myFormat)) {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
-
+							
+							
 							//	This is the code that is actually taking the cell value from the drag-from 
 							//	cell and dropping a new Image into the dragged-to cell
 							ImageView iv = new ImageView(GetImage(CellFrom.getiCellValue()));
@@ -340,6 +346,8 @@ public class SudokuController implements Initializable {
 							paneTarget.getChildren().clear();
 							paneTarget.getChildren().add(iv);
 							System.out.println(CellFrom.getiCellValue());							
+							
+							lastCell = paneTarget;
 							
 							//count mistakes and end game if exceed maximum mistakes
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
@@ -376,7 +384,25 @@ public class SudokuController implements Initializable {
 						event.consume();
 					}
 				});
-
+				
+				paneTarget.setOnKeyPressed(
+						event -> {
+							System.out.println("here");
+							if (lastCell != null) {
+								switch (event.getCode()) {
+									case BACK_SPACE:
+									case DELETE:
+										revertCell(lastCell);
+								default:
+									
+								}
+							}
+							event.consume();
+						}
+						
+					
+				);
+				
 				gridPaneSudoku.add(paneTarget, iCol, iRow); // Add the pane to the grid
 			}
 
@@ -429,6 +455,17 @@ public class SudokuController implements Initializable {
 		}
 		
 		return lbl;
+	}
+	
+	private void revertCell(SudokuCell c) {
+		ObservableList<Node> childs = c.getChildren();
+		for (Object o : childs) {
+			if (o instanceof Pane)
+				c.getChildren().remove(o);
+		}
+		Cell CellTo = (Cell) c.getCell();
+		c.getCell().setiCellValue(0);
+		s.getPuzzle()[c.getCell().getiRow()][c.getCell().getiCol()] = 0;
 	}
 	
 }
