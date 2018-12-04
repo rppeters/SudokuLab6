@@ -115,7 +115,10 @@ public class SudokuController implements Initializable {
 	private void CreateSudokuInstance() {
 		eGD = this.game.geteGameDifficulty();
 		s = game.StartSudoku(this.game.getPuzzleSize(), eGD);
+		//reset attributes
 		zeros = s.getZeroAmount();
+		actions.clear();
+		s.setMistakes(0);
 	}
 
 	/**
@@ -352,7 +355,7 @@ public class SudokuController implements Initializable {
 							paneTarget.getCell().setiCellValue(CellFrom.getiCellValue());
 							paneTarget.getChildren().clear();
 							paneTarget.getChildren().add(iv);
-							System.out.println(CellFrom.getiCellValue() + " words ");							
+							System.out.println(CellFrom.getiCellValue());							
 						
 							//add new action/SudokuCell to actions list
 							actions.add(paneTarget);
