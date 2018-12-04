@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -60,6 +61,8 @@ public class SudokuController implements Initializable {
 	
 	private SudokuCell lastCell = null;
 	
+	private LinkedList<SudokuCell> actions = new LinkedList<SudokuCell>();
+	
 	@FXML
 	private GridPane gpTop;
 	
@@ -95,6 +98,11 @@ public class SudokuController implements Initializable {
 	private void btnStartGame(ActionEvent event) {
 		CreateSudokuInstance();
 		BuildGrids();
+	}
+	
+	@FXML
+	private void btnUndo(ActionEvent event) {
+		undoLastAction(actions);
 	}
 
 	/**
@@ -266,7 +274,7 @@ public class SudokuController implements Initializable {
 					paneTarget.getChildren().add(iv);
 				}
 
-				paneTarget.getStyleClass().clear(); // Clear any errant styling in the pane
+				paneTarget.getStyleClass().clear(); // Clear any arrant styling in the pane
 				paneTarget.setStyle(ss.getStyle(new Cell(iRow, iCol))); // Set the styling.
 
 				paneTarget.setOnMouseClicked(e -> {
@@ -324,7 +332,7 @@ public class SudokuController implements Initializable {
 
 				paneTarget.setOnDragDropped(new EventHandler<DragEvent>() {
 					public void handle(DragEvent event) {
-
+					
 						Dragboard db = event.getDragboard();
 						boolean success = false;
 						Cell CellTo = (Cell) paneTarget.getCell();
@@ -338,26 +346,24 @@ public class SudokuController implements Initializable {
 						if (db.hasContent(myFormat)) {
 							Cell CellFrom = (Cell) db.getContent(myFormat);
 							
-							
 							//	This is the code that is actually taking the cell value from the drag-from 
 							//	cell and dropping a new Image into the dragged-to cell
 							ImageView iv = new ImageView(GetImage(CellFrom.getiCellValue()));
 							paneTarget.getCell().setiCellValue(CellFrom.getiCellValue());
 							paneTarget.getChildren().clear();
 							paneTarget.getChildren().add(iv);
-							System.out.println(CellFrom.getiCellValue());							
+							System.out.println(CellFrom.getiCellValue() + " words ");							
+						
+							//add new action/SudokuCell to actions list
+							actions.add(paneTarget);
 							
-							lastCell = paneTarget;
-							
-							//count mistakes and end game if exceed maximum mistakes
+							//count mistakes and end game if exceeding maximum mistakes
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 								s.getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom.getiCellValue();
 								s.setMistakes(s.getMistakes() + 1);
 								if (s.getMistakes() >= eGD.getMaxMistakes()) {
 									gameOver(false);
 								}
-								
-								
 								
 								if (game.getShowHints()) {
 									
@@ -370,7 +376,6 @@ public class SudokuController implements Initializable {
 							zeros--;
 							//if no more zeros, determine if won/lost
 							if (zeros <= 0) {
-								s.PrintPuzzle();
 								if (s.isSudoku()) {
 									gameOver(true);
 								} else {
@@ -382,27 +387,8 @@ public class SudokuController implements Initializable {
 						}
 						event.setDropCompleted(success);
 						event.consume();
+						//System.out.printf("Mistakes: %s; Actions: %d; Zeros: %d\n", s.getMistakes(), actions.size(), s.getZeroAmount());
 					}
-				});
-				
-				paneTarget.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-					@Override
-					public void handle(KeyEvent event) {
-						System.out.println("here");
-						if (lastCell != null) {
-							switch (event.getCode()) {
-								case BACK_SPACE:
-								case DELETE:
-									clearCell(lastCell);
-									break;
-								default:
-									break;
-							}
-						}
-						event.consume();
-					}
-					
 				});
 				
 				gridPaneSudoku.add(paneTarget, iCol, iRow); // Add the pane to the grid
@@ -459,15 +445,16 @@ public class SudokuController implements Initializable {
 		return lbl;
 	}
 	
-	private void clearCell(SudokuCell c) {
-		ObservableList<Node> childs = c.getChildren();
-		for (Object o : childs) {
-			if (o instanceof Pane)
-				c.getChildren().remove(o);
+	private void undoLastAction(LinkedList<SudokuCell> actions) {
+		if (actions.size() != 0) {
+			//remove last action
+			SudokuCell c = (SudokuCell) actions.pollLast();
+			//clear and set to 0
+			c.getChildren().clear();
+			c.getCell().setiCellValue(0);
+			//reset puzzle and zeros
+			s.getPuzzle()[c.getCell().getiRow()][c.getCell().getiCol()] = 0;
+			zeros = s.getZeroAmount();
 		}
-		Cell CellTo = (Cell) c.getCell();
-		c.getCell().setiCellValue(0);
-		s.getPuzzle()[c.getCell().getiRow()][c.getCell().getiCol()] = 0;
-	}
-	
+	}	
 }

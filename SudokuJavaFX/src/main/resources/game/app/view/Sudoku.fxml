@@ -15,6 +15,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#btnStartGame" text="Start Game" />
             <Button mnemonicParsing="false" text="End Game" />
+            <Button mnemonicParsing="false" onAction="#btnUndo" text="Undo" />
          </children></HBox>
    </bottom>
    <top>
