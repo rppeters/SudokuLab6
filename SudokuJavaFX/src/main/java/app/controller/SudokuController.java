@@ -394,9 +394,10 @@ public class SudokuController implements Initializable {
 							switch (event.getCode()) {
 								case BACK_SPACE:
 								case DELETE:
-									revertCell(lastCell);
-							default:
-								
+									clearCell(lastCell);
+									break;
+								default:
+									break;
 							}
 						}
 						event.consume();
@@ -458,7 +459,7 @@ public class SudokuController implements Initializable {
 		return lbl;
 	}
 	
-	private void revertCell(SudokuCell c) {
+	private void clearCell(SudokuCell c) {
 		ObservableList<Node> childs = c.getChildren();
 		for (Object o : childs) {
 			if (o instanceof Pane)
