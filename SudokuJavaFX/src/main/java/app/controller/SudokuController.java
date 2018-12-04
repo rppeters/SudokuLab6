@@ -385,23 +385,24 @@ public class SudokuController implements Initializable {
 					}
 				});
 				
-				paneTarget.setOnKeyPressed(
-						event -> {
-							System.out.println("here");
-							if (lastCell != null) {
-								switch (event.getCode()) {
-									case BACK_SPACE:
-									case DELETE:
-										revertCell(lastCell);
-								default:
-									
-								}
+				paneTarget.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent event) {
+						System.out.println("here");
+						if (lastCell != null) {
+							switch (event.getCode()) {
+								case BACK_SPACE:
+								case DELETE:
+									revertCell(lastCell);
+							default:
+								
 							}
-							event.consume();
 						}
-						
+						event.consume();
+					}
 					
-				);
+				});
 				
 				gridPaneSudoku.add(paneTarget, iCol, iRow); // Add the pane to the grid
 			}
