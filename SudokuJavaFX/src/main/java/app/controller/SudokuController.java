@@ -55,6 +55,8 @@ public class SudokuController implements Initializable {
 
 	private int zeros;
 	
+	private Cell lastCell;
+	
 	@FXML
 	private GridPane gpTop;
 	
@@ -160,7 +162,7 @@ public class SudokuController implements Initializable {
 	}
 
 	/**
-	 * BuildNumbersGrid - This is the 'numbers' grid... a grid of the avaiable numbers based on the
+	 * BuildNumbersGrid - This is the 'numbers' grid... a grid of the available numbers based on the
 	 * flavor of the game.  If you're playing 4x4, you'll get numbers 1, 2, 3, 4.
 	 * 
 	 * @version 1.5
@@ -293,6 +295,8 @@ public class SudokuController implements Initializable {
 								if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 									if (game.getShowHints()) {
 										paneTarget.getChildren().add(0, SudokuStyler.getRedPane());
+										//logic for more red panes (opaque for clarity)
+									
 									}
 								}
 							}
@@ -348,7 +352,7 @@ public class SudokuController implements Initializable {
 								
 								
 								if (game.getShowHints()) {
-
+									
 								}
 
 							} else {
@@ -365,9 +369,6 @@ public class SudokuController implements Initializable {
 									gameOver(false);
 								}
 							}
-
-							System.out.println("Mistakes:" + s.getMistakes());
-							System.out.println("max Mistakes:" + eGD.getMaxMistakes());
 							
 							success = true;
 						}
@@ -406,7 +407,8 @@ public class SudokuController implements Initializable {
 				"Let's play again!",
 				"Woooohooo!",
 				"Yay! :)",
-				">_<"};
+				">_<",
+				"Now let's try 3-D Sudoku"};
 		
 		String[] lostMsgs = {"Really? It wasn't that hard!",
 				"Better luck next time!",
