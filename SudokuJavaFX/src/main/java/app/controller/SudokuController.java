@@ -311,8 +311,6 @@ public class SudokuController implements Initializable {
 								if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 									if (game.getShowHints()) {
 										paneTarget.getChildren().add(0, SudokuStyler.getRedPane());
-										//logic for more red panes (opaque for clarity)
-									
 									}
 								}
 							}

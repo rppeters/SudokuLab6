@@ -387,7 +387,7 @@ public class Sudoku extends LatinSquare implements Serializable {
 	 * 
 	 * @return - return region number based on given column and row
 	 */
-	private int getRegionNbr(int iCol, int iRow) {
+	public int getRegionNbr(int iCol, int iRow) {
 
 		int i = (iCol / iSqrtSize) + ((iRow / iSqrtSize) * iSqrtSize);
 
@@ -413,7 +413,7 @@ public class Sudoku extends LatinSquare implements Serializable {
 	 * @param iRow given row
 	 * @return - returns a one-dimensional array from a given region of the puzzle
 	 */
-	private int[] getRegion(int iCol, int iRow) {
+	public int[] getRegion(int iCol, int iRow) {
 
 		int i = (iCol / iSqrtSize) + ((iRow / iSqrtSize) * iSqrtSize);
 
