@@ -127,7 +127,7 @@ public class SudokuStyler {
 	
 	public static Pane getRedOpaquePane() {
 		Pane p = new Pane();
-		String strStyle = "-fx-background-color: rgba(255, 0, 0, 0.25); ";
+		String strStyle = "-fx-background-color: rgba(255, 0, 0, 0.2); ";
 		p.setStyle(strStyle);
 		return p;
 	}

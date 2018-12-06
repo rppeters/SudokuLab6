@@ -158,6 +158,10 @@ public class Sudoku extends LatinSquare implements Serializable {
 		this.mistakes = mistakes;
 	}
 	
+	public void addMistake() {
+		this.mistakes = this.mistakes + 1;
+	}
+	
 	public int getZeroAmount() {
 		int zeros = 0;
 		for (int iRow = 0; iRow < iSize; iRow++) {
@@ -167,7 +171,6 @@ public class Sudoku extends LatinSquare implements Serializable {
 			}
 		}
 		return zeros;
-		
 	}
 	
 	private void RemoveCells() {

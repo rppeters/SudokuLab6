@@ -59,8 +59,6 @@ public class SudokuController implements Initializable {
 
 	private int zeros;
 	
-	private SudokuCell lastCell = null;
-	
 	private LinkedList<SudokuCell> actions = new LinkedList<SudokuCell>();
 	
 	@FXML
@@ -115,7 +113,7 @@ public class SudokuController implements Initializable {
 	private void CreateSudokuInstance() {
 		eGD = this.game.geteGameDifficulty();
 		s = game.StartSudoku(this.game.getPuzzleSize(), eGD);
-		//reset attributes
+		//reset attributes in the case of multiple games played
 		zeros = s.getZeroAmount();
 		actions.clear();
 		s.setMistakes(0);
@@ -229,7 +227,6 @@ public class SudokuController implements Initializable {
 			// Add the pane to the grid
 			gridPaneNumbers.add(paneSource, iCol, 0);
 		}
-		lastCell = null;
 		
 		return gridPaneNumbers;
 	}
@@ -311,6 +308,7 @@ public class SudokuController implements Initializable {
 								if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 									if (game.getShowHints()) {
 										paneTarget.getChildren().add(0, SudokuStyler.getRedPane());
+									
 									}
 								}
 							}
@@ -388,7 +386,6 @@ public class SudokuController implements Initializable {
 						}
 						event.setDropCompleted(success);
 						event.consume();
-						//System.out.printf("Mistakes: %s; Actions: %d; Zeros: %d\n", s.getMistakes(), actions.size(), s.getZeroAmount());
 					}
 				});
 				
@@ -447,6 +444,7 @@ public class SudokuController implements Initializable {
 	}
 	
 	private void undoLastAction(LinkedList<SudokuCell> actions) {
+		//undoing an action does not reset mistakes (we are cruel)
 		if (actions.size() != 0) {
 			//remove last action
 			SudokuCell c = (SudokuCell) actions.pollLast();
