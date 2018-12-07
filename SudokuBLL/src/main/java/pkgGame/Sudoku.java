@@ -159,7 +159,7 @@ public class Sudoku extends LatinSquare implements Serializable {
 	}
 	
 	public void addMistake() {
-		this.mistakes = this.mistakes + 1;
+		this.mistakes++;
 	}
 	
 	public int getZeroAmount() {

@@ -174,5 +174,20 @@ public class SudokuTest {
 			fail("Test failed to build Sudoku (s1)");
 		}
 	}
+	
+	@Test 
+	public void mistakes_Test() {
+		try {
+			Sudoku s1 = new Sudoku(9, eGameDifficulty.HARD);
+			assertEquals(0, s1.getMistakes());
+			
+			s1.addMistake();
+			assertEquals(1, s1.getMistakes());
+		} catch (Exception e) {
+			fail("Test failed to build Sudoku");
+		}
+	}
+	
+	
 
 }

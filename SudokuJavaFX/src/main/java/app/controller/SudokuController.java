@@ -359,7 +359,7 @@ public class SudokuController implements Initializable {
 							//count mistakes and end game if exceeding maximum mistakes
 							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 								s.getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom.getiCellValue();
-								s.setMistakes(s.getMistakes() + 1);
+								s.addMistake();
 								if (s.getMistakes() >= eGD.getMaxMistakes()) {
 									gameOver(false);
 								}
