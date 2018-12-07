@@ -375,6 +375,7 @@ public class SudokuController implements Initializable {
 							zeros--;
 							//if no more zeros, determine if won/lost
 							if (zeros <= 0) {
+								s.PrintPuzzle();
 								if (s.isSudoku()) {
 									gameOver(true);
 								} else {
@@ -415,7 +416,7 @@ public class SudokuController implements Initializable {
 		
 		String[] wonMsgs = {"Congratulations!",
 				"Great Job!",
-				"I hope it wasn't a 2x2!",
+				"I hope it wasn't a 4x4!",
 				"Let's play again!",
 				"Woooohooo!",
 				"Yay! :)",
@@ -435,6 +436,7 @@ public class SudokuController implements Initializable {
 		else 
 			lbl = "You Lost! " + lostMsgs[r.nextInt(lostMsgs.length + 1)];
 		
+		//give 45 white space for faux-CENTER align
 		int lblSize = lbl.length();
 		while (lbl.length() < 45) {
 			lbl = " " + lbl;
